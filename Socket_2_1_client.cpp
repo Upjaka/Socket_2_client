@@ -1,9 +1,11 @@
 ﻿#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
 
 #include <iostream>
 #include <cstring>
 #include <cstdlib>
 #include <ctime>
+#include <string>
 #include <WinSock2.h>
 
 #pragma comment(lib, "Ws2_32.lib")
@@ -55,7 +57,9 @@ int main() {
         time_t now = time(nullptr);
         struct tm timeInfo;
         localtime_s(&timeInfo, &now);
-        strftime(message, sizeof(message), "Ping %d-%m-%y-%H-%M-%S", &timeInfo);
+        strftime(message, sizeof(message), "%d-%m-%y-%H-%M-%S", &timeInfo);
+        std::string str_message = "Ping " + std::to_string(i + 1) + " " + message;
+        std::strcpy(message, str_message.c_str());
 
         // Send message to server
         int bytesSent = sendto(clientSocket, message, strlen(message), 0, (sockaddr*)&serverAddr, sizeof(serverAddr));
